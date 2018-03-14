@@ -1,0 +1,11 @@
+Package: ICDpred
+Version: 0.1.0
+Date: 2018-12-05
+Title: ICDpred
+Description: Compute score for ICD prediction in vitro
+Imports: ChemmineR,rcdk, RCurl
+LazyData: true
+Author: Allan Sauvat <allan.sauvat@gustaveroussy.fr>
+Maintainer: Allan Sauvat <allan.sauvat@gustaveroussy.fr>
+License: GPL (> 2)
+RoxygenNote: 6.0.1
