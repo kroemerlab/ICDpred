@@ -20,10 +20,10 @@ devtools::install_github("kroemerlab/ICDpred")
 
 ## Usage
 After installation, you have first to load the package by typing:
- ```R
+```R
 library(ICDpred)
 ```
 The *ICDscoring* function can now be used using the PubChem ID of your molecule(s):
- ```R
+```R
 ICDscoring(CID=4212) #return mitoxantrone results
 ```
