@@ -10,7 +10,6 @@ Some package dependencies must be fulfilled before installing the package. Open 
 ```R
 install.packages(pkgs=c('devtools','RCurl','rcdk'), repos = "http://cloud.r-project.org")
 source("http://bioconductor.org/biocLite.R");biocLite(pkgs='ChemmineR', ask=F)
-devtools::install_github("kroemerlab/ICDpred")
 ```
 
 ## Installation
