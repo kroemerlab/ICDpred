@@ -18,7 +18,7 @@ In R console, type :
 devtools::install_github("kroemerlab/ICDpred")
 ```
 
-##Usage
+## Usage
 After installation, you have first to load the package by typing:
  ```R
 library(ICDpred)
