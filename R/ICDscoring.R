@@ -52,7 +52,7 @@ ICDscoring = function(CID,SDF){
   }else{
     ccl='Potential ICD inducer'
   }
-  return(list(Descriptors=descs[setdiff(colnames(Train.Descs),Txt)],Score=Score,Conclusion=ccl,sdf=SDF))
+  return(list(cid=CID,Descriptors=descs[setdiff(colnames(Train.Descs),Txt)],Score=Score,Conclusion=ccl,sdf=SDF))
   
 }
 
