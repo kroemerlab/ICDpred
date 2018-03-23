@@ -4,10 +4,12 @@
 \alias{ICDscoring}
 \title{ICD inducing prediction}
 \usage{
-ICDscoring(CID)
+ICDscoring(CID, SDF)
 }
 \arguments{
 \item{CID}{Pubchem CID#'}
+
+\item{SDF}{Molecule 2D structure (must be sdf format)#'}
 }
 \value{
 A list with computed scores and other useful information
@@ -16,7 +18,6 @@ A list with computed scores and other useful information
 Compute an ICD score
 }
 \examples{
-#Not running
 test=ICDscoring(CID=4212) #Compute score for MTX
 
 }

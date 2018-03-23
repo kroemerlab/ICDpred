@@ -7,21 +7,26 @@
 #' @import RCurl
 #'
 #' @param CID Pubchem CID#'
+#' @param SDF Molecule 2D structure (must be sdf format)#'
 #' @return A list with computed scores and other useful information
 #'
 #' @author Allan Sauvat, \email{allan.sauvat@gustaveroussy.fr}
 #'
 #' @examples
-#' #Not running
 #' test=ICDscoring(CID=4212) #Compute score for MTX
 #'
 #' @export
 #'
 
-ICDscoring = function(CID){
+ICDscoring = function(CID,SDF){
+  
+  #Error handling
+  if(length(CID)!=1|length(SDF)!=1){
+    return('Function can only be applied on a single molecule at a time, please iterate!')
+  }
   
   #IMPORT MOLECULAR INFOS
-  SDF=getIds(CID)
+  if(missing(SDF)){SDF=getIds(CID)}
   SMI=sdf2smiles(SDF)
   PAR=parse.smiles(as.character(SMI))
   
