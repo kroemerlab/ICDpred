@@ -8,7 +8,7 @@ To install the package, you need to have [R](https://cran.r-project.org/) and [J
 ## Packages dependencies
 Some package dependencies must be fulfilled before installing the package. Open an R session and type:
 ```R
-install.packages(pkgs=c('devtools','RCurl','rcdk'), repos = "http://cloud.r-project.org")
+install.packages(pkgs=c('devtools','Rcpp','RCurl','rcdk'), repos = "http://cloud.r-project.org")
 source("http://bioconductor.org/biocLite.R");biocLite(pkgs='ChemmineR', ask=F)
 ```
 
