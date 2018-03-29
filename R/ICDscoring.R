@@ -21,12 +21,11 @@
 ICDscoring = function(CID,SDF){
   
   #Error handling
+  if(missing(SDF)){SDF=getIds(CID)}
   if(length(CID)!=1|length(SDF)!=1){
     return('Function can only be applied on a single molecule at a time, please iterate!')
   }
-  
   #IMPORT MOLECULAR INFOS
-  if(missing(SDF)){SDF=getIds(CID)}
   SMI=sdf2smiles(SDF)
   PAR=parse.smiles(as.character(SMI))
   
