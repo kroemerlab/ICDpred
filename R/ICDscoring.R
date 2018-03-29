@@ -41,16 +41,18 @@ ICDscoring = function(CID,SDF){
   descs[miss]=precp #For compatibility with ancient use of rpubchem
   
   #EVALUATE SCORE
-  Score=predict(Best.mod$Model,data.frame(pred.transform(as.matrix(descs[setdiff(colnames(Train.Descs),Txt)])))[1:(Best.mod$ncp)])
+  Score=as.numeric(predict(Best.mod$Model,data.frame(pred.transform(as.matrix(descs[setdiff(colnames(Train.Descs),Txt)])))[1:(Best.mod$ncp)]))
   
-  #RETRUN RESULTS
-  if(Score<2){
-    ccl='Weak chance of inducing ICD'
-  }else if(Score>6){
-    ccl='Artefactual risk'
-  }else{
-    ccl='Potential ICD inducer'
-  }
+  #RETURN RESULTS
+  ccl='unable to calculate score'
+  if(!is.na(Score)){
+    if(Score<2){
+      ccl='Weak chance of inducing ICD'
+    }else if(Score>6){
+      ccl='Artefactual risk'
+    }else{
+      ccl='Potential ICD inducer'
+    }}
   return(list(cid=CID,Descriptors=descs[setdiff(colnames(Train.Descs),Txt)],Score=Score,Conclusion=ccl,sdf=SDF))
   
 }
