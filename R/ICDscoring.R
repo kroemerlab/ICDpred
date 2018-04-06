@@ -22,6 +22,7 @@ ICDscoring = function(CID,SDF){
   
   #Error handling
   if(missing(SDF)){SDF=getIds(CID)}
+  if(missing(CID)){CID=as.numeric(sdfid(SDF))}
   if(length(CID)!=1|length(SDF)!=1){
     return('Function can only be applied on a single molecule at a time, please iterate!')
   }
@@ -33,11 +34,15 @@ ICDscoring = function(CID,SDF){
   dn=sapply(get.desc.categories(),function(x)get.desc.names(x))
   descs=do.call('cbind',lapply(dn, function(x)eval.desc(PAR,x)))
   
-  #ADD PRECOMPUTED DESCRIPTORS  
+  #ADD PRECOMPUTED DESCRIPTORS
+  nm=c("PUBCHEM_MOLECULAR_WEIGHT","PUBCHEM_CACTVS_HBOND_DONOR","PUBCHEM_CACTVS_HBOND_ACCEPTOR","PUBCHEM_CACTVS_ROTATABLE_BOND",
+          "PUBCHEM_EXACT_MASS","PUBCHEM_MONOISOTOPIC_WEIGHT","PUBCHEM_CACTVS_TPSA","PUBCHEM_HEAVY_ATOM_COUNT","PUBCHEM_CACTVS_COMPLEXITY")
+  
+  precp=data.frame(datablock2ma(datablocklist=datablock(SDF)))[nm]
+  precp=sapply(colnames(precp),function(x)precp[,x]=as.numeric(as.character(precp[,x])))
+
   miss=c("Molecular.Weight","Hydrogen.Bond.Donor.Count","Hydrogen.Bond.Acceptor.Count",
          "Rotatable.Bond.Count","Exact.Mass","Monoisotopic.Mass","Topological.Polar.Surface.Area","Heavy.Atom.Count","Complexity")
-  pugn=gsub('[.]','',miss);pugn[c(2,3,7)]=c('HBondDonorCount','HBondAcceptorCount','TPSA')
-  precp=sapply(pugn,function(x)as.numeric(getURL(paste0('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/',as.character(CID),'/property/',x,'/TXT'))))
   descs[miss]=precp #For compatibility with ancient use of rpubchem
   
   #EVALUATE SCORE
