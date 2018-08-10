@@ -9,7 +9,7 @@ ICDscoring(CID, SDF)
 \arguments{
 \item{CID}{Pubchem CID#'}
 
-\item{SDF}{Molecule 2D structure (must be sdf format)#'}
+\item{SDF}{Molecule 2D structure (must be sdf format)}
 }
 \value{
 A list with computed scores and other useful information

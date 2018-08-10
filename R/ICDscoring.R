@@ -7,7 +7,7 @@
 #' @import RCurl
 #'
 #' @param CID Pubchem CID#'
-#' @param SDF Molecule 2D structure (must be sdf format)#'
+#' @param SDF Molecule 2D structure (must be sdf format)
 #' @return A list with computed scores and other useful information
 #'
 #' @author Allan Sauvat, \email{allan.sauvat@gustaveroussy.fr}
@@ -28,21 +28,35 @@ ICDscoring = function(CID,SDF){
   }
   #IMPORT MOLECULAR INFOS
   SMI=sdf2smiles(SDF)
-  PAR=parse.smiles(as.character(SMI))
+  PAR=parse.smiles(unname(as.character(SMI)))[[1]]
+  
+  ## Need to configure the molecule
+  invisible({do.aromaticity(PAR);do.typing(PAR);do.isotopes(PAR)})
   
   #CALCULATE DESCRIPTORS
   dn=sapply(get.desc.categories(),function(x)get.desc.names(x))
   descs=do.call('cbind',lapply(dn, function(x)eval.desc(PAR,x)))
   
   #ADD PRECOMPUTED DESCRIPTORS
-  nm=c("PUBCHEM_MOLECULAR_WEIGHT","PUBCHEM_CACTVS_HBOND_DONOR","PUBCHEM_CACTVS_HBOND_ACCEPTOR","PUBCHEM_CACTVS_ROTATABLE_BOND",
-          "PUBCHEM_EXACT_MASS","PUBCHEM_MONOISOTOPIC_WEIGHT","PUBCHEM_CACTVS_TPSA","PUBCHEM_HEAVY_ATOM_COUNT","PUBCHEM_CACTVS_COMPLEXITY")
-  
-  precp=data.frame(datablock2ma(datablocklist=datablock(SDF)))[nm]
-  precp=sapply(colnames(precp),function(x)precp[,x]=as.numeric(as.character(precp[,x])))
-
   miss=c("Molecular.Weight","Hydrogen.Bond.Donor.Count","Hydrogen.Bond.Acceptor.Count",
          "Rotatable.Bond.Count","Exact.Mass","Monoisotopic.Mass","Topological.Polar.Surface.Area","Heavy.Atom.Count","Complexity")
+  
+  PUB=any(grepl('PUBCHEM_CACTVS_COMPLEXITY',colnames(datablock2ma(datablocklist=datablock(SDF)))))
+  
+  if(PUB){
+    nm=c("PUBCHEM_MOLECULAR_WEIGHT","PUBCHEM_CACTVS_HBOND_DONOR","PUBCHEM_CACTVS_HBOND_ACCEPTOR","PUBCHEM_CACTVS_ROTATABLE_BOND",
+         "PUBCHEM_EXACT_MASS","PUBCHEM_MONOISOTOPIC_WEIGHT","PUBCHEM_CACTVS_TPSA","PUBCHEM_HEAVY_ATOM_COUNT","PUBCHEM_CACTVS_COMPLEXITY")
+    
+    precp=data.frame(datablock2ma(datablocklist=datablock(SDF)))[nm]
+    precp=sapply(colnames(precp),function(x)precp[,x]=as.numeric(as.character(precp[,x])))
+  }else{
+    print('No CACTVS records, calculating an approximation...')
+    precp=cbind(get.natural.mass(PAR),descs[,c('electronic.nHBDon','electronic.nHBAcc','constitutional.nRotB')],
+                get.exact.mass(PAR),descs[c('constitutional.MW','topological.TopoPSA')],
+                descs$constitutional.nAtom-get.total.hydrogen.count(PAR),
+                exp(log(descs[,'topological.fragC']+1)*cdk2cac[2]+cdk2cac[1])-1) #CACTVS complexity approximation
+  }
+
   descs[miss]=precp #For compatibility with ancient use of rpubchem
   
   #EVALUATE SCORE
