@@ -1,5 +1,5 @@
 Package: ICDpred
-Version: 0.1.2
+Version: 0.1.2.1
 Date: 2018-12-05
 Title: ICDpred
 Description: Compute score for ICD prediction in vitro
@@ -9,4 +9,6 @@ Author: Allan Sauvat <allan.sauvat@gustaveroussy.fr>
 Maintainer: Allan Sauvat <allan.sauvat@gustaveroussy.fr>
 License: GPL (> 2)
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.1
+NeedsCompilation: no
+Packaged: 2020-10-20 12:16:46 UTC; allan

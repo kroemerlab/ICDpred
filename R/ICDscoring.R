@@ -35,7 +35,9 @@ ICDscoring = function(CID,SDF){
   
   #CALCULATE DESCRIPTORS
   dn=sapply(get.desc.categories(),function(x)get.desc.names(x))
+  dn$constitutional=dn$constitutional[-7] #Buggy descriptor to be removed
   descs=do.call('cbind',lapply(dn, function(x)eval.desc(PAR,x)))
+  descs[,'constitutional.nAtomLAC']=NA #Add buggy descriptor name
   
   #ADD PRECOMPUTED DESCRIPTORS
   miss=c("Molecular.Weight","Hydrogen.Bond.Donor.Count","Hydrogen.Bond.Acceptor.Count",
@@ -59,8 +61,15 @@ ICDscoring = function(CID,SDF){
 
   descs[miss]=precp #For compatibility with ancient use of rpubchem
   
+  #CLEAN DATA
+  descs=descs[setdiff(colnames(Train.Descs),Txt)] #Keep relevant features
+  if(any(is.na(descs))){
+    nm = colnames(descs)[is.na(descs)]
+    for(x in nm){descs[x]=median(Train.Descs[,nm],na.rm=T)}
+  }
+  
   #EVALUATE SCORE
-  Score=as.numeric(predict(Best.mod$Model,data.frame(pred.transform(as.matrix(descs[setdiff(colnames(Train.Descs),Txt)])))[1:(Best.mod$ncp)]))
+  Score=as.numeric(predict(Best.mod$Model,data.frame(pred.transform(as.matrix(descs)))[1:(Best.mod$ncp)]))
   
   #RETURN RESULTS
   ccl='unable to calculate score'
